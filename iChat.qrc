@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qtquickcontrols2.conf</file>
+        <file>icons/logo.png</file>
+        <file>icons/shadow.png</file>
+        <file>icons/close-bold.svg</file>
+        <file>icons/window-minimize.svg</file>
+        <file>icons/window-maximize.svg</file>
+    </qresource>
+</RCC>
