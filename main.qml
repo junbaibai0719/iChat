@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 
+import componentLib
+
 Window {
     id: window
     width: 640
@@ -23,8 +25,10 @@ Window {
         parent: bordMouseArea
         shadowWidth: shellWidth
         Row {
+            id: header
             width: parent.width
             height: 30
+            z:100
             Component.onCompleted: console.log(spacing, parent.width, parent)
             MouseArea {
                 width: parent.width - 3 * (minimizedBtn.width + parent.spacing)
@@ -69,6 +73,15 @@ Window {
                 }
 
                 onClicked: window.close()
+            }
+        }
+        StackView {
+            id:	body
+            anchors.fill: parent
+            contentItem: Rectangle {
+                Text{
+                    text: "hello world"
+                }
             }
         }
     }

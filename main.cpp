@@ -1,7 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
-
 #include <QLocale>
 #include <QTranslator>
 #include <QWindow>
@@ -26,7 +25,9 @@ int main(int argc, char *argv[])
     }
 
     QQmlApplicationEngine engine;
+    qDebug() << engine.pluginPathList();
     const QUrl url(u"qrc:/iChat/main.qml"_qs);
+
 //    const QIcon icon(":/icons/logo.png");
 //    app.setWindowIcon(icon);
     QObject::connect(&app, &QGuiApplication::lastWindowClosed, &app,[]() {
