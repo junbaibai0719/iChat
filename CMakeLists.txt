@@ -4,7 +4,11 @@ project(iChat VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
+#set(CMAKE_EXE_LINKER_FLAGS "-static")
 set(CMAKE_AUTORCC ON)
+
+add_subdirectory(qml/componentLib)
 
 #if (WIN32)
     set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/resources/iChat.rc")
@@ -24,8 +28,6 @@ qt_add_qml_module(appiChat
     VERSION 1.0
     QML_FILES
         main.qml
-        MyComponent/Buttons/FlatButton.qml
-        MyComponent/ShadowRectangle.qml
 #    RESOURCES
 #        icons/logo.png
 #        qtquickcontrols2.conf
@@ -45,7 +47,9 @@ target_compile_definitions(appiChat
 )
 
 target_link_libraries(appiChat
-    PRIVATE Qt6::Quick
+    PRIVATE
+    componentLib
+    Qt6::Quick
     Qt6::QuickControls2
 )
 
