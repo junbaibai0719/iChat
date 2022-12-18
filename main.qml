@@ -6,8 +6,8 @@ import iChat
 
 Window {
     id: window
-    width: 640
-    height: 480
+    width: 1024
+    height: 768
     visible: true
     title: qsTr(" ")
     color: "#00000000"
@@ -19,7 +19,7 @@ Window {
             shellWidth = 6
             window.showNormal()
         } else {
-            shellWidth = 0;
+            shellWidth = 0
             window.showMaximized()
         }
     }
@@ -81,78 +81,9 @@ Window {
         StackView {
             id: body
             anchors.fill: parent
-            contentItem: Rectangle {
-                Text {
-                    text: "hello world"
-                }
-                TreeView {
-                    anchors.fill: parent
-                    anchors.margins: 30
-                    model: TreeModel {
-                        rows: [{
-                                "name": "aaaa"
-                            }, {
-                                "name": "nnnnn"
-                            }, {
-                                "name": "ddddd",
-                                "children": [{
-                                        "name": "222222222222",
-                                        "children": [{
-                                                "name": "........."
-                                            }]
-                                    }, {
-                                        "name": "333333333333333"
-                                    }]
-                            }]
-                        TreeColumn {
-                            prop: "name"
-                            label: "名字"
-                        }
-
-                        Component.onCompleted: {
-                            console.log(rows[0], rows[1], headers[0])
-                        }
-                    }
-                    delegate: Item {
-                        id: treeDelegate
-
-                        implicitWidth: padding + label.x + label.implicitWidth + padding
-                        implicitHeight: label.implicitHeight * 1.5
-
-                        readonly property real indent: 20
-                        readonly property real padding: 5
-
-                        // Assigned to by TreeView:
-                        required property TreeView treeView
-                        required property bool isTreeNode
-                        required property bool expanded
-                        required property int hasChildren
-                        required property int depth
-
-                        TapHandler {
-                            onTapped: treeView.toggleExpanded(row)
-                        }
-
-                        Text {
-                            id: indicator
-                            visible: treeDelegate.isTreeNode
-                                     && treeDelegate.hasChildren
-                            x: padding + (treeDelegate.depth * treeDelegate.indent)
-                            anchors.verticalCenter: label.verticalCenter
-                            text: "▸"
-                            rotation: treeDelegate.expanded ? 90 : 0
-                        }
-
-                        Text {
-                            id: label
-                            x: padding + (treeDelegate.isTreeNode ? (treeDelegate.depth + 1)
-                                                                    * treeDelegate.indent : 0)
-                            width: treeDelegate.width - treeDelegate.padding - x
-                            clip: true
-                            text: name
-                        }
-                    }
-                }
+            Component.onCompleted: console.log(width, height)
+            contentItem: TestJsonModel {
+                width: parent.width
             }
         }
     }

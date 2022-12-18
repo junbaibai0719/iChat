@@ -127,7 +127,6 @@ QVariant TreeModel::rows() const
 
 void TreeModel::setRows(const QVariant &rows)
 {
-    // qDebug\(\)[\s\S]+
     if (rows.userType() != qMetaTypeId<QJSValue>()) {
         qmlWarning(this) << "setRows(): \"rows\" must be an array; actual type is " << rows.typeName();
         return;
@@ -161,7 +160,6 @@ int TreeModel::columnCount(const QModelIndex &parent) const
 
 QVariant TreeModel::data(const QModelIndex &index, const QString &role) const
 {
-    // qDebug\(\)[\s\S]+
     const int iRole = m_roleNames.key(role.toUtf8(), -1);
     if (iRole >= 0)
         return data(index, iRole);
@@ -170,20 +168,15 @@ QVariant TreeModel::data(const QModelIndex &index, const QString &role) const
 
 QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
-    // qDebug\(\)[\s\S]+
-    // qDebug\(\)[\s\S]+
     if (!index.isValid()) {
         return QVariant();
     }
-    // qDebug\(\)[\s\S]+
     if (role != Qt::DisplayRole && role != Qt::EditRole) {
         return QVariant();
     }
 
     InternalItem *item = getItem(index);
     QJSValue data = item->m_data;
-    // qDebug\(\)[\s\S]+
-    // qDebug\(\)[\s\S]+
     return QVariant::fromValue(data.property(QString(m_roleNames.value(role))));
 }
 
@@ -223,7 +216,7 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-    // qDebug\(\)[\s\S]+
+    qDebug() << column;
     if (parent.isValid() && parent.column() != 0) {
         return QModelIndex();
     }
@@ -233,10 +226,8 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
     if (!childItem) {
         QJSValue childData;
         if (parentItem == rootItem) {
-            // qDebug\(\)[\s\S]+
             childData = m_rows.property(row);
         } else {
-            // qDebug\(\)[\s\S]+
             childData = parentItem->m_data.property(m_childrenKey).property(row);
         }
         childItem = new InternalItem(childData, parentItem);
@@ -331,7 +322,6 @@ bool TreeModel::removeRows(int position, int rows, const QModelIndex &parent)
 int TreeModel::rowCount(const QModelIndex &parent) const
 {
 
-    // qDebug\(\)[\s\S]+
     if (parent.isValid() && parent.column() > 0) {
         return 0;
     }
@@ -341,7 +331,6 @@ int TreeModel::rowCount(const QModelIndex &parent) const
         return m_rows.property(LENGTH).toInt();
     }
     int len = parentItem->m_data.property(m_childrenKey).property(LENGTH).toInt();
-    // qDebug\(\)[\s\S]+
     return len;
 }
 

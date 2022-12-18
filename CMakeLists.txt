@@ -33,6 +33,7 @@ qt_add_qml_module(appiChat
     VERSION 1.0
     QML_FILES
         main.qml
+        TestJsonModel.qml
     NO_RESOURCE_TARGET_PATH
 #    SOURCEs
 #        treeitem.h treeitem.cpp
