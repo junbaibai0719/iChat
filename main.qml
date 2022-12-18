@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import componentLib
+import iChat
 
 Window {
     id: window
@@ -15,8 +16,10 @@ Window {
     property int shellWidth: 6
     function toggleMaximized() {
         if (window.visibility === Window.Maximized) {
+            shellWidth = 6
             window.showNormal()
         } else {
+            shellWidth = 0;
             window.showMaximized()
         }
     }
@@ -28,7 +31,7 @@ Window {
             id: header
             width: parent.width
             height: 30
-            z:100
+            z: 100
             Component.onCompleted: console.log(spacing, parent.width, parent)
             MouseArea {
                 width: parent.width - 3 * (minimizedBtn.width + parent.spacing)
@@ -76,11 +79,79 @@ Window {
             }
         }
         StackView {
-            id:	body
+            id: body
             anchors.fill: parent
             contentItem: Rectangle {
-                Text{
+                Text {
                     text: "hello world"
+                }
+                TreeView {
+                    anchors.fill: parent
+                    anchors.margins: 30
+                    model: TreeModel {
+                        rows: [{
+                                "name": "aaaa"
+                            }, {
+                                "name": "nnnnn"
+                            }, {
+                                "name": "ddddd",
+                                "children": [{
+                                        "name": "222222222222",
+                                        "children": [{
+                                                "name": "........."
+                                            }]
+                                    }, {
+                                        "name": "333333333333333"
+                                    }]
+                            }]
+                        TreeColumn {
+                            prop: "name"
+                            label: "名字"
+                        }
+
+                        Component.onCompleted: {
+                            console.log(rows[0], rows[1], headers[0])
+                        }
+                    }
+                    delegate: Item {
+                        id: treeDelegate
+
+                        implicitWidth: padding + label.x + label.implicitWidth + padding
+                        implicitHeight: label.implicitHeight * 1.5
+
+                        readonly property real indent: 20
+                        readonly property real padding: 5
+
+                        // Assigned to by TreeView:
+                        required property TreeView treeView
+                        required property bool isTreeNode
+                        required property bool expanded
+                        required property int hasChildren
+                        required property int depth
+
+                        TapHandler {
+                            onTapped: treeView.toggleExpanded(row)
+                        }
+
+                        Text {
+                            id: indicator
+                            visible: treeDelegate.isTreeNode
+                                     && treeDelegate.hasChildren
+                            x: padding + (treeDelegate.depth * treeDelegate.indent)
+                            anchors.verticalCenter: label.verticalCenter
+                            text: "▸"
+                            rotation: treeDelegate.expanded ? 90 : 0
+                        }
+
+                        Text {
+                            id: label
+                            x: padding + (treeDelegate.isTreeNode ? (treeDelegate.depth + 1)
+                                                                    * treeDelegate.indent : 0)
+                            width: treeDelegate.width - treeDelegate.padding - x
+                            clip: true
+                            text: name
+                        }
+                    }
                 }
             }
         }

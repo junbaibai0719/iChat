@@ -9,8 +9,14 @@
 
 #include "message_handler.h"
 
+void add_env_path(const QString &path){
+    qputenv("PATH", QString("%1;%2").arg(path, qgetenv("PATH")).toStdString().c_str());
+}
+
 int main(int argc, char *argv[])
 {
+    add_env_path("./qml/componentLib");
+
     qInstallMessageHandler(messageHandler);
     QGuiApplication app(argc, argv);
 
@@ -26,14 +32,17 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     qDebug() << engine.pluginPathList();
-    const QUrl url(u"qrc:/iChat/main.qml"_qs);
+    const QUrl url("qrc:///main.qml");
+    engine.addImportPath("./qml");
 
-//    const QIcon icon(":/icons/logo.png");
-//    app.setWindowIcon(icon);
     QObject::connect(&app, &QGuiApplication::lastWindowClosed, &app,[]() {
         qDebug()<<"dasdasdad";
     }, Qt::AutoConnection);
-    qDebug()<< QQuickStyle::name();
+
+//    QQuickStyle::setStyle("Material");
+//    qDebug()<< QQuickStyle::name();
+    qDebug() << "sadaasd撒大大";
+
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
     &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl) {
@@ -41,8 +50,6 @@ int main(int argc, char *argv[])
         };
         QWindow *window = (QWindow *)obj;
         if(window) {
-
-//            window->setFlags(window->flags()| Qt::FramelessWindowHint);
         }
     }, Qt::QueuedConnection);
     engine.load(url);

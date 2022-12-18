@@ -29,10 +29,10 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
     default:
         msgType = QString("DEBUG:");
     }
-    QString contextInfo = QString("Process:%1 Thread:%2 File:%3 Func:%4 Line:%5").arg(
+    QString contextInfo = QString("Process:%1 Thread:%2 Func:%3 Line:%4").arg(
                               QString::number(getpid()),
                               QString::number(quintptr(QThread::currentThreadId())),
-                              QString(context.file),
+//                              QString(context.file),
                               QString(context.function),
                               QString::number(context.line)
                           );
