@@ -72,25 +72,28 @@ public:
 signals:
     void headersChanged();
     void rowsChanged();
-public slots:
-    void on_headersChanged();
 private:
     class InternalItem
     {
     public:
-        InternalItem(const QJSValue &data, InternalItem *parent=nullptr)
-        {
-            m_data = data;
-            parentItem = parent;
-        }
+        InternalItem(const QJSValue &data, InternalItem *parent=nullptr);
+        InternalItem *child(int row);
+        bool insertChild(int pos, InternalItem * child);
+        int rowInParent() const;
+        void setRowInParent(int row);
+        InternalItem *parent();
+
         QJSValue m_data;
-        int rowInParent=0;
+    private:
+        int m_rowInParent=0;
         InternalItem *parentItem;
+        QList<InternalItem *> childItems;
+
     };
     QString m_childrenKey = "children";
     const QString LENGTH = "length";
     const QString PARENT = "parent";
-    InternalItem * getItem(const QModelIndex &index) const;
+    InternalItem *getItem(const QModelIndex &index) const;
     QList<TreeColumn *> m_headers;
     QHash<int, QByteArray> m_roleNames;
     InternalItem *rootItem;

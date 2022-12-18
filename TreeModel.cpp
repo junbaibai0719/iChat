@@ -14,12 +14,6 @@ TreeModel::TreeModel(QObject *parent)
 //    qDebug() << this->rootItem.isObject();
 //    qDebug() << "1";
     rootItem = new InternalItem(QJSValue());
-    QObject::connect(this, &TreeModel::headersChanged, this, &TreeModel::on_headersChanged,  Qt::AutoConnection);
-    QObject::connect(this, &TreeModel::dataChanged, this, [](const QModelIndex &leftIndex,
-                     const QModelIndex &righeIndex,
-    const QList<int> roles) {
-        qDebug() << "data changed" << roles;
-    },  Qt::AutoConnection);
 
 
 }
@@ -29,10 +23,45 @@ TreeModel::~TreeModel()
 }
 
 
-void TreeModel::on_headersChanged()
+TreeModel::InternalItem::InternalItem(const QJSValue &data, InternalItem *parent)
 {
-    qDebug() << "headers changed";
+    m_data = data;
+    parentItem = parent;
 }
+
+TreeModel::InternalItem *TreeModel::InternalItem::child(int index)
+{
+    if (index < 0 || index >= childItems.size()) {
+        return nullptr;
+    }
+    return childItems.at(index);
+}
+
+bool TreeModel::InternalItem::insertChild(int pos, InternalItem *child)
+{
+    if (pos < 0 || pos > childItems.size()) {
+        return false;
+    }
+    childItems.insert(pos, child);
+    child->setRowInParent(pos);
+    return true;
+}
+
+int TreeModel::InternalItem::rowInParent() const{
+    return m_rowInParent;
+}
+
+void TreeModel::InternalItem::setRowInParent(int row)
+{
+    m_rowInParent = row;
+}
+
+TreeModel::InternalItem *TreeModel::InternalItem::parent()
+{
+    return parentItem;
+}
+
+
 
 /*
 * Property method
@@ -98,7 +127,7 @@ QVariant TreeModel::rows() const
 
 void TreeModel::setRows(const QVariant &rows)
 {
-    qDebug() << rows;
+    // qDebug\(\)[\s\S]+
     if (rows.userType() != qMetaTypeId<QJSValue>()) {
         qmlWarning(this) << "setRows(): \"rows\" must be an array; actual type is " << rows.typeName();
         return;
@@ -132,7 +161,7 @@ int TreeModel::columnCount(const QModelIndex &parent) const
 
 QVariant TreeModel::data(const QModelIndex &index, const QString &role) const
 {
-    qDebug() << role;
+    // qDebug\(\)[\s\S]+
     const int iRole = m_roleNames.key(role.toUtf8(), -1);
     if (iRole >= 0)
         return data(index, iRole);
@@ -141,20 +170,20 @@ QVariant TreeModel::data(const QModelIndex &index, const QString &role) const
 
 QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
-    qDebug() <<index.row() << index.column() << role;
-    qDebug() << (index == QModelIndex());
+    // qDebug\(\)[\s\S]+
+    // qDebug\(\)[\s\S]+
     if (!index.isValid()) {
         return QVariant();
     }
-    qDebug() << role;
+    // qDebug\(\)[\s\S]+
     if (role != Qt::DisplayRole && role != Qt::EditRole) {
         return QVariant();
     }
 
     InternalItem *item = getItem(index);
     QJSValue data = item->m_data;
-    qDebug() << QString(m_roleNames.value(role));
-    qDebug() << data.property("name").toString();
+    // qDebug\(\)[\s\S]+
+    // qDebug\(\)[\s\S]+
     return QVariant::fromValue(data.property(QString(m_roleNames.value(role))));
 }
 
@@ -194,22 +223,25 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-    qDebug() << row << column << parent.isValid() << (parent == QModelIndex());
+    // qDebug\(\)[\s\S]+
     if (parent.isValid() && parent.column() != 0) {
         return QModelIndex();
     }
 
     InternalItem *parentItem = getItem(parent);
-    QJSValue childData;
-    if (parentItem == rootItem) {
-        qDebug() << "parent is root";
-        childData = m_rows.property(row);
-    } else {
-        qDebug() << "parent is not root";
-        childData = parentItem->m_data.property(m_childrenKey).property(row);
+    InternalItem *childItem = parentItem->child(row);
+    if (!childItem) {
+        QJSValue childData;
+        if (parentItem == rootItem) {
+            // qDebug\(\)[\s\S]+
+            childData = m_rows.property(row);
+        } else {
+            // qDebug\(\)[\s\S]+
+            childData = parentItem->m_data.property(m_childrenKey).property(row);
+        }
+        childItem = new InternalItem(childData, parentItem);
+        parentItem->insertChild(row, childItem);
     }
-    InternalItem *childItem = new InternalItem(childData, parentItem);
-    childItem->rowInParent = row;
     return createIndex(row, column, childItem);
 }
 
@@ -247,17 +279,17 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
     if (!index.isValid()) {
         return QModelIndex();
     }
-    qDebug() << index.row() << index.column();
+    // qDebug\(\)[\s\S]+
     InternalItem *childItem = getItem(index);
     if (rootItem == childItem) {
         return QModelIndex();
     }
-    InternalItem *parent = childItem->parentItem;
+    InternalItem *parent = childItem->parent();
 
     if (!parent) {
         return QModelIndex();
     }
-    return createIndex(parent->rowInParent, 0, parent);
+    return createIndex(parent->rowInParent(), 0, parent);
 }
 
 QHash<int, QByteArray> TreeModel::roleNames() const
@@ -298,15 +330,18 @@ bool TreeModel::removeRows(int position, int rows, const QModelIndex &parent)
 
 int TreeModel::rowCount(const QModelIndex &parent) const
 {
+
+    // qDebug\(\)[\s\S]+
     if (parent.isValid() && parent.column() > 0) {
         return 0;
     }
 
-    InternalItem * parentItem = getItem(parent);
+    InternalItem *parentItem = getItem(parent);
     if (rootItem == parentItem) {
         return m_rows.property(LENGTH).toInt();
     }
     int len = parentItem->m_data.property(m_childrenKey).property(LENGTH).toInt();
+    // qDebug\(\)[\s\S]+
     return len;
 }
 
