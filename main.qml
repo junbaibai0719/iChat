@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import componentLib
+import iChat
 
 Window {
     id: window
@@ -28,7 +29,7 @@ Window {
             id: header
             width: parent.width
             height: 30
-            z:100
+            z: 100
             Component.onCompleted: console.log(spacing, parent.width, parent)
             MouseArea {
                 width: parent.width - 3 * (minimizedBtn.width + parent.spacing)
@@ -76,11 +77,41 @@ Window {
             }
         }
         StackView {
-            id:	body
+            id: body
             anchors.fill: parent
             contentItem: Rectangle {
-                Text{
+                Text {
                     text: "hello world"
+                }
+                TreeView {
+                    anchors.fill:parent
+                    anchors.margins:30
+                    model: TreeModel {
+                        rows: [{
+                                "name": "aaaa"
+                            }, {
+                                "name": "nnnnn"
+                            }, {
+                                "name": "ddddd"
+                            }]
+                        TreeColumn {
+                            prop: "name"
+                            label: "名字"
+                        }
+                        onHeadersChanged: {
+                            console.log(headers);
+                        }
+
+                        Component.onCompleted: {
+                            console.log(rows[0], rows[1], headers[0])
+                        }
+                    }
+                    delegate: Rectangle {
+                        Text {
+                            id: txt
+                            text: name
+                        }
+                    }
                 }
             }
         }
