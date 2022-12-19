@@ -47,7 +47,8 @@ bool TreeModel::InternalItem::insertChild(int pos, InternalItem *child)
     return true;
 }
 
-int TreeModel::InternalItem::rowInParent() const{
+int TreeModel::InternalItem::rowInParent() const
+{
     return m_rowInParent;
 }
 
@@ -138,8 +139,14 @@ void TreeModel::setRows(const QVariant &rows)
     }
     this->m_rows = rowsAsJSValue;
     emit this->dataChanged(createIndex(0,0), createIndex(3,3), {Qt::DisplayRole});
-    for (int i = 0; i < m_headers.length(); ++i) {
-        m_roleNames[i] = m_headers[i]->prop().toUtf8();
+
+    static const auto supportedRoleNames = TreeColumn::supportedRoleNames();
+    const auto builtInRoleKeys = supportedRoleNames.keys();
+    for (const int builtInRoleKey : builtInRoleKeys) {
+        const QString builtInRoleName = supportedRoleNames.value(builtInRoleKey);
+        // This column now supports this specific built-in role.
+        // Add it if it doesn't already exist.
+        m_roleNames[builtInRoleKey] = builtInRoleName.toUtf8();
     }
     beginResetModel();
     endResetModel();
@@ -160,6 +167,7 @@ int TreeModel::columnCount(const QModelIndex &parent) const
 
 QVariant TreeModel::data(const QModelIndex &index, const QString &role) const
 {
+    qDebug() << role;
     const int iRole = m_roleNames.key(role.toUtf8(), -1);
     if (iRole >= 0)
         return data(index, iRole);
@@ -168,6 +176,7 @@ QVariant TreeModel::data(const QModelIndex &index, const QString &role) const
 
 QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
+//    qDebug() << index.row() << index.column() << role;
     if (!index.isValid()) {
         return QVariant();
     }
@@ -175,9 +184,14 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
+    QString roleName = QString::fromUtf8(roleNames().value(role));
+    TreeColumn * column = m_headers[index.column()];
+    QJSValue keyName = column->getterAtRole(roleName);
+    qDebug() << "keyname:" << keyName.toString() ;
     InternalItem *item = getItem(index);
     QJSValue data = item->m_data;
-    return QVariant::fromValue(data.property(QString(m_roleNames.value(role))));
+    qDebug() << "value: " << data.property(keyName.toString()).toString();
+    return QVariant::fromValue(data.property(keyName.toString()));
 }
 
 Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
@@ -216,7 +230,7 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-    qDebug() << column;
+//    qDebug() << column;
     if (parent.isValid() && parent.column() != 0) {
         return QModelIndex();
     }

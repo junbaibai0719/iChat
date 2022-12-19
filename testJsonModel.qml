@@ -19,7 +19,7 @@ Rectangle {
                 "address1": "111111111111111111"
             }, {
                 "name": "ddddd",
-                "address": "00000000000",
+                "address": "NNNNNNNNNNN",
                 "address1": "111111111111111111",
                 "children": [{
                         "name": "222222222222",
@@ -31,15 +31,15 @@ Rectangle {
                     }]
             }]
         TreeColumn {
-            prop: "name"
+            display: "name"
             label: "名字"
         }
         TreeColumn {
-            prop: "address"
+            display: "address"
             label: "地址"
         }
         TreeColumn {
-            prop: "address1"
+            display: "address1"
             label: "地址1"
         }
         Component.onCompleted: {
@@ -65,7 +65,7 @@ Rectangle {
             console.log(width, height)
         }
 
-        model: tableModel
+        model: treeModel
         delegate: Item {
             id: treeDelegate
             implicitWidth: padding + label.x + label.implicitWidth + padding
@@ -116,19 +116,23 @@ Rectangle {
     TableView {
         anchors.fill: parent
         anchors.topMargin: 300
-        model: tableModel
+        model: treeModel
+//        model: tableModel
         columnSpacing: 20
         delegate: DelegateChooser {
-            role: "display"
+//            role: "display"
             DelegateChoice {
-                roleValue: "aaaa"
+                column: 0
+//                roleValue: "aaaa"
                 delegate: Text {
                     id: txt
                     color: "#ff0000"
                     text: display
+                    Component.onCompleted: console.log(roleValue == display)
                 }
             }
             DelegateChoice {
+                column: 1
 //                roleValue: "aaaa"
                 delegate: Text {
                     id: txt1
