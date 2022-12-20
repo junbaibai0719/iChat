@@ -7,6 +7,7 @@
 #include <QtQml>
 
 #include "TreeColumn.h"
+#include "TreeItem.h"
 
 class TreeModel: public QAbstractItemModel
 {
@@ -73,30 +74,13 @@ signals:
     void headersChanged();
     void rowsChanged();
 private:
-    class InternalItem
-    {
-    public:
-        InternalItem(const QJSValue &data, InternalItem *parent=nullptr);
-        InternalItem *child(int row);
-        bool insertChild(int pos, InternalItem * child);
-        int rowInParent() const;
-        void setRowInParent(int row);
-        InternalItem *parent();
-
-        QJSValue m_data;
-    private:
-        int m_rowInParent=0;
-        InternalItem *parentItem;
-        QList<InternalItem *> childItems;
-
-    };
     QString m_childrenKey = "children";
     const QString LENGTH = "length";
     const QString PARENT = "parent";
-    InternalItem *getItem(const QModelIndex &index) const;
+    TreeItem *getItem(const QModelIndex &index) const;
     QList<TreeColumn *> m_headers;
     QHash<int, QByteArray> m_roleNames;
-    InternalItem *rootItem;
+    TreeItem *rootItem;
     QJSValue m_rows;
 };
 

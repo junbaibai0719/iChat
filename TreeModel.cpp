@@ -13,7 +13,7 @@ TreeModel::TreeModel(QObject *parent)
 //    this->rootItem.setProperty(m_childrenKey, this->m_rows);
 //    qDebug() << this->rootItem.isObject();
 //    qDebug() << "1";
-    rootItem = new InternalItem(QJSValue());
+    rootItem = new TreeItem(QJSValue());
 
 
 }
@@ -21,47 +21,6 @@ TreeModel::TreeModel(QObject *parent)
 TreeModel::~TreeModel()
 {
 }
-
-
-TreeModel::InternalItem::InternalItem(const QJSValue &data, InternalItem *parent)
-{
-    m_data = data;
-    parentItem = parent;
-}
-
-TreeModel::InternalItem *TreeModel::InternalItem::child(int index)
-{
-    if (index < 0 || index >= childItems.size()) {
-        return nullptr;
-    }
-    return childItems.at(index);
-}
-
-bool TreeModel::InternalItem::insertChild(int pos, InternalItem *child)
-{
-    if (pos < 0 || pos > childItems.size()) {
-        return false;
-    }
-    childItems.insert(pos, child);
-    child->setRowInParent(pos);
-    return true;
-}
-
-int TreeModel::InternalItem::rowInParent() const
-{
-    return m_rowInParent;
-}
-
-void TreeModel::InternalItem::setRowInParent(int row)
-{
-    m_rowInParent = row;
-}
-
-TreeModel::InternalItem *TreeModel::InternalItem::parent()
-{
-    return parentItem;
-}
-
 
 
 /*
@@ -188,7 +147,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     TreeColumn * column = m_headers[index.column()];
     QJSValue keyName = column->getterAtRole(roleName);
     qDebug() << "keyname:" << keyName.toString() ;
-    InternalItem *item = getItem(index);
+    TreeItem *item = getItem(index);
     QJSValue data = item->m_data;
     qDebug() << "value: " << data.property(keyName.toString()).toString();
     return QVariant::fromValue(data.property(keyName.toString()));
@@ -205,10 +164,10 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 
 
 
-TreeModel::InternalItem *TreeModel::getItem(const QModelIndex &index) const
+TreeItem *TreeModel::getItem(const QModelIndex &index) const
 {
     if (index.isValid()) {
-        InternalItem *item = static_cast<InternalItem *>(index.internalPointer());
+        TreeItem *item = static_cast<TreeItem *>(index.internalPointer());
         if (item) {
             return item;
         }
@@ -235,8 +194,8 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
         return QModelIndex();
     }
 
-    InternalItem *parentItem = getItem(parent);
-    InternalItem *childItem = parentItem->child(row);
+    TreeItem *parentItem = getItem(parent);
+    TreeItem *childItem = parentItem->child(row);
     if (!childItem) {
         QJSValue childData;
         if (parentItem == rootItem) {
@@ -244,7 +203,7 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
         } else {
             childData = parentItem->m_data.property(m_childrenKey).property(row);
         }
-        childItem = new InternalItem(childData, parentItem);
+        childItem = new TreeItem(childData, parentItem);
         parentItem->insertChild(row, childItem);
     }
     return createIndex(row, column, childItem);
@@ -285,11 +244,11 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
         return QModelIndex();
     }
     // qDebug\(\)[\s\S]+
-    InternalItem *childItem = getItem(index);
+    TreeItem *childItem = getItem(index);
     if (rootItem == childItem) {
         return QModelIndex();
     }
-    InternalItem *parent = childItem->parent();
+    TreeItem *parent = childItem->parent();
 
     if (!parent) {
         return QModelIndex();
@@ -340,7 +299,7 @@ int TreeModel::rowCount(const QModelIndex &parent) const
         return 0;
     }
 
-    InternalItem *parentItem = getItem(parent);
+    TreeItem *parentItem = getItem(parent);
     if (rootItem == parentItem) {
         return m_rows.property(LENGTH).toInt();
     }
