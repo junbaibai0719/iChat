@@ -8,6 +8,7 @@
 
 
 #include "message_handler.h"
+#include "db/SqlExecutor.h"
 
 void add_env_path(const QString &path){
     qputenv("PATH", QString("%1;%2").arg(path, qgetenv("PATH")).toStdString().c_str());
@@ -29,6 +30,8 @@ int main(int argc, char *argv[])
             break;
         }
     }
+
+    SqlExecutor sqlExecutor;
 
     QQmlApplicationEngine engine;
     qDebug() << engine.pluginPathList();
