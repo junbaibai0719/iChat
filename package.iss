@@ -27,7 +27,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=D:\Documents\qt_project\build-iChat-Desktop_Qt_6_4_1_MinGW_64_bit-MinSizeRel\dist
+OutputDir=D:\Documents\qt_project\build-iChat-Desktop_Qt_6_4_1_MSVC2019_64bit-MinSizeRel\dist
 OutputBaseFilename=mysetup
 Compression=lzma
 SolidCompression=yes
@@ -40,8 +40,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\Documents\qt_project\build-iChat-Desktop_Qt_6_4_1_MinGW_64_bit-MinSizeRel\output\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Documents\qt_project\build-iChat-Desktop_Qt_6_4_1_MinGW_64_bit-MinSizeRel\output\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\Documents\qt_project\build-iChat-Desktop_Qt_6_4_1_MSVC2019_64bit-MinSizeRel\output\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Documents\qt_project\build-iChat-Desktop_Qt_6_4_1_MSVC2019_64bit-MinSizeRel\output\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

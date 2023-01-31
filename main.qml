@@ -1,10 +1,13 @@
 import QtQuick
 import QtQuick.Controls
 
+import componentLib
+import iChat
+
 Window {
     id: window
-    width: 640
-    height: 480
+    width: 1024
+    height: 768
     visible: true
     title: qsTr(" ")
     color: "#00000000"
@@ -13,8 +16,10 @@ Window {
     property int shellWidth: 6
     function toggleMaximized() {
         if (window.visibility === Window.Maximized) {
+            shellWidth = 6
             window.showNormal()
         } else {
+            shellWidth = 0
             window.showMaximized()
         }
     }
@@ -23,8 +28,10 @@ Window {
         parent: bordMouseArea
         shadowWidth: shellWidth
         Row {
+            id: header
             width: parent.width
             height: 30
+            z: 100
             Component.onCompleted: console.log(spacing, parent.width, parent)
             MouseArea {
                 width: parent.width - 3 * (minimizedBtn.width + parent.spacing)
@@ -69,6 +76,14 @@ Window {
                 }
 
                 onClicked: window.close()
+            }
+        }
+        StackView {
+            id: body
+            anchors.fill: parent
+            Component.onCompleted: console.log(width, height)
+            contentItem: TestJsonModel {
+                width: parent.width
             }
         }
     }
