@@ -16,17 +16,22 @@ add_subdirectory(qml/componentLib)
     set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/resources/iChat.rc")
 #endif()
 find_package(Qt6 REQUIRED
-    COMPONENTS Quick QuickControls2)
+    COMPONENTS Quick QuickControls2 Sql)
+
 
 qt_add_executable(appiChat
-    iChat.qrc
     main.cpp
         treeitem.h treeitem.cpp
         message_handler.h    message_handler.cpp
         treemodel.h treemodel.cpp
         treecolumn.h treecolumn.cpp
+        db/SqlExecutor.h db/SqlExecutor.cpp
     ${app_icon_resource_windows}
 )
+
+qt_add_big_resources(SOURCES iChat.qrc)
+target_sources(appiChat PRIVATE ${SOURCES})
+
 
 qt_add_qml_module(appiChat
     URI iChat
@@ -34,6 +39,7 @@ qt_add_qml_module(appiChat
     QML_FILES
         main.qml
         TestJsonModel.qml
+        VideoPlayer.qml
     NO_RESOURCE_TARGET_PATH
 #    SOURCEs
 #        treeitem.h treeitem.cpp
@@ -63,6 +69,7 @@ target_link_libraries(appiChat
     componentLib
     Qt6::Quick
     Qt6::QuickControls2
+    Qt6::Sql
 )
 
 install(TARGETS appiChat

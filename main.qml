@@ -82,8 +82,11 @@ Window {
             id: body
             anchors.fill: parent
             Component.onCompleted: console.log(width, height)
-            contentItem: TestJsonModel {
-                width: parent.width
+//            contentItem: TestJsonModel {
+//                width: parent.width
+//            }
+            contentItem: VideoPlayer {
+
             }
         }
     }
