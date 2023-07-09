@@ -17,6 +17,9 @@ qt_add_qml_module(componentLib
     QML_FILES
         ShadowRectangle.qml
         Buttons/FlatButton.qml
+        DatePicker.qml
+        ElMonthGrid.qml
+        Link.qml
 )
 
 set_target_properties(componentLib PROPERTIES

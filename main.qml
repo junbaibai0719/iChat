@@ -82,11 +82,14 @@ Window {
             id: body
             anchors.fill: parent
             Component.onCompleted: console.log(width, height)
-//            contentItem: TestJsonModel {
-//                width: parent.width
-//            }
-            contentItem: VideoPlayer {
-
+            //            contentItem: TestJsonModel {
+            //                width: parent.width
+            //            }
+            contentItem: Rectangle {
+                anchors.fill: parent
+                DatePicker {
+                    anchors.centerIn:parent
+                }
             }
         }
     }

@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
 set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/qml" CACHE STRING "qml import path")
+set(QT_DECLARATIVE_DEBUG true)
+set(QT_QML_DEBUG true)
 
 add_subdirectory(qml/componentLib)
 
