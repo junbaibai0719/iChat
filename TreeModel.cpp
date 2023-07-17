@@ -146,10 +146,10 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     QString roleName = QString::fromUtf8(roleNames().value(role));
     TreeColumn * column = m_headers[index.column()];
     QJSValue keyName = column->getterAtRole(roleName);
-    qDebug() << "keyname:" << keyName.toString() ;
+//    qDebug() << "keyname:" << keyName.toString() ;
     TreeItem *item = getItem(index);
     QJSValue data = item->m_data;
-    qDebug() << "value: " << data.property(keyName.toString()).toString();
+//    qDebug() << "value: " << data.property(keyName.toString()).toString();
     return QVariant::fromValue(data.property(keyName.toString()));
 }
 

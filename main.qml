@@ -85,11 +85,14 @@ Window {
             //            contentItem: TestJsonModel {
             //                width: parent.width
             //            }
-            contentItem: Rectangle {
-                anchors.fill: parent
-                DatePicker {
-                    anchors.centerIn:parent
-                }
+//            contentItem: Rectangle {
+//                anchors.fill: parent
+//                DatePicker {
+//                    anchors.centerIn:parent
+//                }
+//            }
+            contentItem: TestJsonModel {
+
             }
         }
     }

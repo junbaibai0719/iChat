@@ -27,6 +27,8 @@ qt_add_executable(appiChat
         message_handler.h    message_handler.cpp
         treemodel.h treemodel.cpp
         treecolumn.h treecolumn.cpp
+        treevariantmodel.h treevariantmodel.cpp
+        variantitem.h variantitem.cpp
         db/SqlExecutor.h db/SqlExecutor.cpp
     ${app_icon_resource_windows}
 )

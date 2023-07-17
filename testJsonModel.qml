@@ -7,6 +7,50 @@ Rectangle {
     Text {
         text: "hello world"
     }
+
+    TreeVariantModel {
+        id: treeVariantModel
+        rows: [{
+                "name": "aaaa",
+                "address": "00000000000",
+                "address1": "111111111111111111"
+            }, {
+                "name": "nnnnn",
+                "address": "00000000000",
+                "address1": "111111111111111111"
+            }, {
+                "name": "ddddd",
+                "address": "NNNNNNNNNNN",
+                "address1": "111111111111111111",
+                "children": [{
+                        "name": "222222222222",
+                        "children": [{
+                                "name": "........."
+                            }]
+                    }, {
+                        "name": "333333333333333"
+                    }]
+            }]
+        TreeColumn {
+            display: "name"
+            label: "名字"
+        }
+        TreeColumn {
+            display: "address"
+            label: "地址"
+        }
+        TreeColumn {
+            display: "address1"
+            label: "地址1"
+        }
+        Component.onCompleted: {
+            console.log(rows[0], rows[1], headers[0])
+            for(let row of rows){
+                console.log(row)
+            }
+        }
+    }
+
     TreeModel {
         id: treeModel
         rows: [{
@@ -44,6 +88,9 @@ Rectangle {
         }
         Component.onCompleted: {
             console.log(rows[0], rows[1], headers[0])
+            for(let row of rows){
+                console.log(row)
+            }
         }
     }
     TableModel {
@@ -54,6 +101,12 @@ Rectangle {
         }
         TableModelColumn {
             display: "address"
+        }
+        Component.onCompleted: {
+            console.log(rows[0], rows[1])
+            for(let row of rows){
+                console.log(row)
+            }
         }
     }
 
@@ -123,7 +176,7 @@ Rectangle {
 //            role: "display"
             DelegateChoice {
                 column: 0
-//                roleValue: "aaaa"
+                roleValue: "aaaa"
                 delegate: Text {
                     id: txt
                     color: "#ff0000"
