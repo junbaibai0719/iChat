@@ -4,7 +4,7 @@ import QtQuick.Layouts
 
 Item {
     id: rootItem
-    implicitWidth: 220
+    implicitWidth: 240
     implicitHeight: 30
 
     property var startDate: null
@@ -35,12 +35,15 @@ Item {
         radius: 4
         RowLayout {
             anchors.fill: parent
+            HoverHandler {
+                id: clearBtnHover
+            }
             Text {
-                Layout.leftMargin: 10
+                Layout.leftMargin: 20
                 Layout.preferredWidth: 80
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                color: rootItem.startDate ===null? "Grey":"#000"
+                color: rootItem.startDate === null ? "Grey" : "#000"
                 text: {
                     if (rootItem.startDate === null) {
                         return qsTr("开始日期")
@@ -57,17 +60,40 @@ Item {
                 text: qsTr("至")
             }
             Text {
-                Layout.rightMargin: 10
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredWidth: 80
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                color: rootItem.endDate ===null? "Grey":"#000"
+                color: rootItem.endDate === null ? "Grey" : "#000"
                 text: {
                     if (rootItem.endDate === null) {
                         return qsTr("结束日期")
                     } else {
                         return Qt.formatDate(rootItem.endDate, "yyyy-MM-dd")
+                    }
+                }
+            }
+            Rectangle {
+                Layout.rightMargin: 10
+                Layout.alignment: Qt.AlignRight
+                Layout.preferredWidth: 10
+                Layout.preferredHeight: 10
+                Text {
+                    id: name
+                    anchors.centerIn: parent
+                    text: qsTr("x")
+                    visible: clearBtnHover.hovered && endDate != null
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            startDate = null
+                            endDate = null
+                            leftMonthGrid.startDate = null
+                            leftMonthGrid.endDate = null
+                            rightMonthGrid.startDate = null
+                            rightMonthGrid.endDate = null
+                        }
                     }
                 }
             }

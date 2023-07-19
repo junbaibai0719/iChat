@@ -85,15 +85,15 @@ Window {
             //            contentItem: TestJsonModel {
             //                width: parent.width
             //            }
-//            contentItem: Rectangle {
-//                anchors.fill: parent
-//                DatePicker {
-//                    anchors.centerIn:parent
-//                }
-//            }
-            contentItem: TestJsonModel {
-
+            contentItem: Rectangle {
+                anchors.fill: parent
+                DatePicker {
+                    anchors.centerIn:parent
+                }
             }
+//            contentItem: TestJsonModel {
+
+//            }
         }
     }
     MouseArea {
